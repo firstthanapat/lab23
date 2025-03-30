@@ -1,5 +1,3 @@
-version: '3.8'  # ใช้ version 3.8 หรือ 3
-
 services:
   web:
     image: python:3.9
