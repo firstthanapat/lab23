@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.8'  # ใช้ version 3.8 หรือ 3
 
 services:
   web:
@@ -11,7 +11,7 @@ services:
     command: ["sh", "script.sh"]
     depends_on:
       db:
-        condition: service_healthy  # รอให้ db service พร้อมก่อน
+        condition: service_healthy  # รอให้ db พร้อมก่อน
 
   db:
     image: mysql
