@@ -1,0 +1,28 @@
+services:
+  web:
+    image: python:3.9
+    ports:
+      - "5000:5000"
+    working_dir: /app
+    volumes:
+      - ./app:/app  # Mount a local directory for web data
+    command: ["sh", "script.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql
+    container_name: db_server
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    ports:
+      - "3606:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 3
+      start_period: 5s
+
