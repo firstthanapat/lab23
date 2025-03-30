@@ -5,6 +5,8 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   docker-ci:
@@ -16,14 +18,17 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
-          docker-compose up -d
+          docker compose up -d
           echo "⏳ Waiting for containers to initialize..."
-          sleep 20  # คำสั่งนี้อาจต้องปรับให้เหมาะสม
+          sleep 60  # เพิ่มเวลาเป็น 60 วินาทีเพื่อให้ db service พร้อม
+
+      - name: Check Docker Compose status
+        run: docker compose ps  # ตรวจสอบสถานะของ container
 
       - name: Run test inside web container
-        run: docker-compose exec -T web curl -s http://localhost:5000/api/users || exit 1
+        run: |
+          docker compose exec -it web curl -s http://localhost:5000/api/users
 
       - name: Shutdown Docker Compose
         if: always()
-        run: docker-compose down
-
+        run: docker compose down
