@@ -6,10 +6,12 @@ services:
     working_dir: /app
     volumes:
       - ./app:/app  # Mount a local directory for web data
-    command: ["sh", "script.sh"]
+    command: ["dockerize", "-wait", "tcp://db:3306", "-timeout", "30s", "sh", "script.sh"]
     depends_on:
       db:
         condition: service_healthy  # รอให้ db พร้อมก่อน
+    environment:
+      - DATABASE_URL=mysql://root:rootpassword@db:3306/dbname
 
   db:
     image: mysql
@@ -25,4 +27,3 @@ services:
       interval: 10s
       retries: 3
       start_period: 5s  # ช่วงเวลาเริ่มต้นก่อนที่ health check จะทำงาน
-
